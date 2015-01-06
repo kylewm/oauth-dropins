@@ -196,6 +196,11 @@ def interpret_http_exception(exception):
   elif isinstance(e, AccessTokenRefreshError) and str(e) == 'invalid_grant':
     code = '401'
 
+  # instagram-specific error_types that should disable the source.
+  if body and ('OAuthAccessTokenException' in body            # revoked access
+               or 'APIRequiresAuthenticationError' in body):  # account deleted
+    code = '401'
+
   if code:
     code = str(code)
   if code or body:

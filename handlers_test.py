@@ -7,8 +7,6 @@ import StringIO
 import urllib2
 import json
 
-import appengine_config
-
 import apiclient.errors
 import httplib2
 from oauth2client.client import AccessTokenRefreshError
@@ -30,7 +28,7 @@ class HandlersTest(testutil.HandlerTest):
     self.assertEquals(('429', 'my body'), ihc(
         apiclient.errors.HttpError(httplib2.Response({'status': 429}), 'my body')))
     self.assertEquals(('429', 'my body'), ihc(
-        urllib2.HTTPError('url', 429, 'msg', {},  StringIO.StringIO('my body'))))
+        urllib2.HTTPError('url', 429, 'msg', {}, StringIO.StringIO('my body'))))
     self.assertEquals((None, 'foo bar'), ihc(urllib2.URLError('foo bar')))
 
     self.assertEquals(('429', 'my body'), ihc(
@@ -39,8 +37,7 @@ class HandlersTest(testutil.HandlerTest):
     self.assertEquals((None, None), ihc(AccessTokenRefreshError('invalid_foo')))
     self.assertEquals(('401', None), ihc(AccessTokenRefreshError('invalid_grant')))
 
-    # this is the type of response we get back from instagram without
-    # the python-instagram library
+    # this is the type of response we get back from instagram
     ig_token_error = json.dumps({
       "meta": {
         "error_type": "OAuthAccessTokenException",
